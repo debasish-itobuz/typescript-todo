@@ -1,5 +1,6 @@
 import todoModel from "../models/todoModel";
 import { Request, Response } from 'express'
+import {CustomRequest} from '../middlewares/tokenVerify'
 import { Todo, todoValidation } from "../validators/todoValidators";
 import { ZodError } from "zod";
 
@@ -8,7 +9,9 @@ const postTodo = async (req: Request, res: Response) => {
         const todo: Todo = req.body;
 
         todoValidation.parse(todo);
-        const data = await todoModel.create(todo)
+        const userId = (req as CustomRequest).userId;
+        console.log(userId)
+        const data = await todoModel.create({...todo, userId});
         return res.status(200).send({ data: data, message: "Data added successfully" })
 
     } catch (e: any | ZodError) {
@@ -21,7 +24,8 @@ const postTodo = async (req: Request, res: Response) => {
 
 const getTodo = async (req: Request, res: Response) => {
     try {
-        const data: Todo[] = await todoModel.find()
+        const userId = (req as CustomRequest).userId;
+        const data: Todo[] = await todoModel.find({userId})
         return res.status(200).send({ data: data, message: "Data fetched successfully" })
     } catch (err) {
         console.log("Error", err)

@@ -1,7 +1,10 @@
 import { Router } from 'express';
+import verifyToken from '../middlewares/tokenVerify';
 import { deleteTodo, filterTodo, getTodo, getTodoById, postTodo, updateTodo } from '../controllers/todoController';
 
 const router = Router()
+
+router.use(verifyToken);
 
 router.post('/post', postTodo)
 router.get('/get', getTodo)

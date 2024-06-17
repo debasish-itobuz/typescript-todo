@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction, Application, ErrorRequestHandler } from 'express'
 import bodyParser from 'body-parser';
 import todoRoutes from './routes/todoRoute'
+import userRoutes from './routes/userRoute'
 import connectToDb from './config/dbConnection';
 import { config } from 'dotenv'
 
@@ -12,6 +13,7 @@ const PORT: Number = Number(process.env.PORT) || 4005
 
 app.use(bodyParser.json());
 app.use(express.json())
+app.use('/user',userRoutes)
 app.use('/todo', todoRoutes)
 
 
